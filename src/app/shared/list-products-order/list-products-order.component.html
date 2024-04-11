@@ -1,0 +1,71 @@
+<ion-grid>
+  <ion-row class="ion-text-center">
+    @if(userOrderService.numProducts() ===0 ){
+    <ion-col>
+      <ion-text>{{ "label.no.products" | translate }}</ion-text>
+    </ion-col>
+
+    }@else {
+
+    <ion-col>
+      <ion-list>
+        @for ( prod of products; track $index) {
+        <ion-item>
+          <ion-label class="ion-text-wrap">
+            {{ prod.product.name | translate }}
+          </ion-label>
+        </ion-item>
+        @if(prod.product.extras){
+<ion-item>
+  <ul>
+    @for(p of prod.product.extras|extrasSelected; track $index){
+      <li>{{p}}</li>
+    }
+  </ul>
+</ion-item>
+        }
+        <ion-card>
+          <ion-card-content>
+            <ion-item lines="none">
+              <ion-label>
+                {{ "label.quantity" | translate }}
+              </ion-label>
+              <ion-icon
+                name="remove-circle-outline"
+                (click)="this.userOrderService.oneLessProduct(prod)"
+              ></ion-icon>
+              <ion-text class="ion-padding">{{ prod.quantity }}</ion-text>
+              <ion-icon
+                name="add-circle-outline"
+                (click)="this.userOrderService.oneMoreProduct(prod)"
+              ></ion-icon>
+            </ion-item>
+
+            <ion-item>
+              <ion-label>
+                {{
+                  ("label.total" | translate) +
+                    userOrderService.totalPrice(prod) +
+                    " €"
+                }}
+              </ion-label>
+            </ion-item>
+          </ion-card-content>
+        </ion-card>
+        }
+      </ion-list>
+    </ion-col>
+
+    }
+  </ion-row>
+  @if(userOrderService.numProducts() >0){
+  <ion-row>
+    <ion-col>
+<ion-item lines="none">
+  <ion-label>{{('label.total.order' | translate) + userOrderService.totalOrder() + ' €'}}</ion-label>
+</ion-item>
+
+    </ion-col>
+  </ion-row>
+  }
+</ion-grid>
